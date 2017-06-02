@@ -22,6 +22,11 @@ public class ArcMenu extends ViewGroup implements OnClickListener{
      * 菜单按钮
      */
     private View mCBMenu;
+
+    double div;
+    double radius;
+    int countLeft;
+    int countRight;
     /**
      * 菜单的位置，为枚举类型
      * @author fuly1314
@@ -146,6 +151,7 @@ public class ArcMenu extends ViewGroup implements OnClickListener{
 
         if(changed)//如果发生了改变，就重新布局
         {
+//            Log.e(TAG,"Width:"+getMeasuredWidth()+"   ---   Height:"+getMeasuredHeight());
             layoutMainMenu();//菜单按钮的布局
             /**
              * 下面的代码为菜单的布局
@@ -156,13 +162,15 @@ public class ArcMenu extends ViewGroup implements OnClickListener{
             {
                 View childView = getChildAt(i+1);//注意这里过滤掉菜单按钮，只要菜单选项view
 
+                //TODO 原来应该是GONE
                 childView.setVisibility(GONE);//先让菜单消失
-
+                //TODO X方向上的位置（距离）
                 int left = (int) (mRadius*Math.cos(Math.PI/2f/(count-2f)*i));
+                //TODO Y方向上的位置（距离）
                 int top = (int) (mRadius*Math.sin(Math.PI/2f/(count-2f)*i));
 
-                Log.e(TAG,"First value left:"+left+"   ---   top:"+top);
-
+//                Log.e(TAG,"*****\nFirst value left:"+left+"   ---   top:"+top);
+                //TODO 计算展开菜单后，对应子菜单的位置
                 switch(mPosition)
                 {
                     case LEFT_TOP:
@@ -176,18 +184,107 @@ public class ArcMenu extends ViewGroup implements OnClickListener{
                     case RIGHT_BOTTOM:
                         left = getMeasuredWidth() - left-childView.getMeasuredWidth();
                         top = getMeasuredHeight() - top-childView.getMeasuredHeight();
+//                        Log.e(TAG,"Init value left:"+left+"   ---   top:"+top +"  ---  Child Width:"+childView.getMeasuredWidth()+"  ---  Child Height:"+childView.getMeasuredHeight());
                         break;
                     case MIDDLE_TOP:
+                        div = Math.PI/2;
+                        radius = Math.PI/6.0 + Math.PI*i*2.0/((count-2)*3.0);
+                        top = (int) (mRadius*Math.sin(radius));
+                        countLeft = 2 * (i+1);
+                        countRight = count;
+                        if(countLeft==countRight){
+                            top = mRadius;
+                            left = 0;
+                        }else{
+                            if(div>radius){
+                                left = (int) (mRadius*Math.cos(radius));
+                            }else{
+                                left = -1*((int) (mRadius*Math.cos(radius)));
+                            }
+                        }
 
+                        if(div>radius){//TODO 没过一半的位置
+                            left = getMeasuredWidth()/2 - left - childView.getMeasuredWidth()/2;
+                        }else{//TODO 超过一半位置
+                            left = getMeasuredWidth()/2 + left - childView.getMeasuredWidth()/2;
+                        }
                         break;
                     case MIDDLE_BOTTOM:
+                        div = Math.PI/2;
+                        radius = Math.PI/6.0 + Math.PI*i*2.0/((count-2)*3.0);
+                        top = (int) (mRadius*Math.sin(radius));
+                        countLeft = 2 * (i+1);
+                        countRight = count;
+                        if(countLeft==countRight){
+                            top = mRadius;
+                            left = 0;
+                        }else{
+                            if(div>radius){
+                                left = (int) (mRadius*Math.cos(radius));
+                            }else{
+                                left = -1*((int) (mRadius*Math.cos(radius)));
+                            }
+                        }
 
+                        if(div>radius){//TODO 没过一半的位置
+                            left = getMeasuredWidth()/2 - left - childView.getMeasuredWidth()/2;
+                        }else{//TODO 超过一半位置
+                            left = getMeasuredWidth()/2 + left - childView.getMeasuredWidth()/2;
+                        }
+                        top = getMeasuredHeight() - top - childView.getMeasuredHeight();
                         break;
                     case CENTER_TOP:
-
+                        //TODO 需要注意的几点信息，Menu包含了子菜单与主菜单按钮
+                        //TODO count 计算的值包含了主按钮
+                        //TODO 子按钮序号从1开始，0号为主按钮
+                        //TODO 获取子View时，若i从0开始，则调用getChild时需要在i的基础上+1
+                        //TODO 弧度的计算与子View有关，需要保证子View对应的位置的正确与否
+                        //
+                        div = Math.PI/2;
+                        radius = Math.PI/6.0 + Math.PI*i*2.0/((count-2)*3.0);
+                        top = (int) (mRadius*Math.sin(radius));
+                        countLeft = 2 * (i+1);
+                        countRight = count;
+                        if(countLeft==countRight){
+                            top = mRadius;
+                            left = 0;
+                        }else{
+                            if(div>radius){
+                                left = (int) (mRadius*Math.cos(radius));
+                            }else{
+                                left = -1*((int) (mRadius*Math.cos(radius)));
+                            }
+                        }
+                        if(div>radius){//TODO 没过一半的位置
+                            left = getMeasuredWidth()/2 - left - childView.getMeasuredWidth()/2;
+                        }else{//TODO 超过一半位置
+                            left = getMeasuredWidth()/2 + left - childView.getMeasuredWidth()/2;
+                        }
+                        top = getMeasuredHeight()/2 - top - childView.getMeasuredHeight()/2;
                         break;
                     case CENTER_BOTTOM:
+                        div = Math.PI/2;
+                        radius = Math.PI/6.0 + Math.PI*i*2.0/((count-2)*3.0);
+                        top = (int) (mRadius*Math.sin(radius));
+                        countLeft = 2 * (i+1);
+                        countRight = count;
+                        if(countLeft==countRight){
+                            top = mRadius;
+                            left = 0;
+                        }else{
+                            if(div>radius){
+                                left = (int) (mRadius*Math.cos(radius));
+                            }else{
+                                left = -1*((int) (mRadius*Math.cos(radius)));
+                            }
+                        }
 
+                        if(div>radius){//TODO 没过一半的位置
+                            left = getMeasuredWidth()/2 - left - childView.getMeasuredWidth()/2;
+                        }else{//TODO 超过一半位置
+                            left = getMeasuredWidth()/2 + left - childView.getMeasuredWidth()/2;
+                        }
+                        top = getMeasuredHeight()/2 + top - childView.getMeasuredHeight()/2;
                         break;
                 }
                 childView.layout(left, top, left+childView.getMeasuredWidth(),
@@ -198,6 +295,7 @@ public class ArcMenu extends ViewGroup implements OnClickListener{
 
     }
     /**
+     * TODO 主菜单位置一般不会移动
      * 菜单按钮的布局
      */
     private void layoutMainMenu() {
@@ -275,7 +373,6 @@ public class ArcMenu extends ViewGroup implements OnClickListener{
         //下面的代码为菜单选项设置动画
 
         int count = getChildCount();
-
         for(int i=0;i<count-1;i++)
         {
             final View childView = getChildAt(i+1);
@@ -304,45 +401,158 @@ public class ArcMenu extends ViewGroup implements OnClickListener{
             {
                 yflag = -1;
             }
-
-            if (mPosition == Position.MIDDLE_BOTTOM || mPosition == Position.CENTER_TOP) {
-                yflag = 1;
-                if(i>=((count-1)/2)){
-                    xflag = -1;
-                }else{
-                    xflag = 1;
-                }
-            }
-            if (mPosition == Position.MIDDLE_TOP || mPosition == Position.CENTER_BOTTOM) {
-                yflag = -1;
-                if(i>=((count-1)/2)){
-                    xflag = -1;
-                }else{
-                    xflag = 1;
-                }
-            }
-
+            /**
+             * 左上
+             xflag =-1;
+             yflag =-1;
+             * 右上
+             xflag =1;
+             yflag =-1;
+             * 左下
+             xflag =-1;
+             yflag =1;
+             * 右下
+             xflag =1;
+             yflag =1;
+             */
+            //TODO 设置子菜单移动的关键部分
             if(mCurStatus == Status.CLOSE)//如果当前状态为关闭则应该打开
             {
-                tAnimation = new TranslateAnimation(xflag*x, 0,
-                        yflag*y, 0);
+                if(mPosition == Position.RIGHT_BOTTOM||mPosition == Position.LEFT_BOTTOM ||
+                        mPosition == Position.LEFT_TOP||mPosition == Position.RIGHT_TOP){
+                    tAnimation = new TranslateAnimation(xflag*x, 0,
+                            yflag*y, 0);
+                }else if(mPosition == Position.MIDDLE_BOTTOM || mPosition == Position.CENTER_TOP){
+                    div = Math.PI/2;
+                    radius = Math.PI/6.0 + Math.PI*i*2.0/((count-2)*3.0);
+                    y = (int) (mRadius*Math.sin(radius));
+                    countLeft = 2 * (i+1);
+                    countRight = count;
+                    if(countLeft==countRight){
+                        y = mRadius;
+                        x = 0;
+                    }else{
+                        if(div>radius){
+                            x = (int) (mRadius*Math.cos(radius));
+                        }else{
+                            x = -1*((int) (mRadius*Math.cos(radius)));
+                        }
+                    }
+                    if(div>radius){//与右下一致
+                        xflag =1;
+                        yflag =1;
+                    }else{//与左下一致
+                        xflag =-1;
+                        yflag =1;
+                    }
+                    tAnimation = new TranslateAnimation(xflag*x, 0,
+                            yflag*y, 0);
+                }else if(mPosition == Position.MIDDLE_TOP || mPosition == Position.CENTER_BOTTOM){
+                    div = Math.PI/2;
+                    radius = Math.PI/6.0 + Math.PI*i*2.0/((count-2)*3.0);
+                    y = (int) (mRadius*Math.sin(radius));
+                    countLeft = 2 * (i+1);
+                    countRight = count;
+                    if(countLeft==countRight){
+                        y = mRadius;
+                        x = 0;
+                    }else{
+                        if(div>radius){
+                            x = (int) (mRadius*Math.cos(radius));
+                        }else{
+                            x = -1*((int) (mRadius*Math.cos(radius)));
+                        }
+                    }
+                    if(div>radius){//与右下一致
+                        xflag =1;
+                        yflag =-1;
+                    }else{//与左下一致
+                        xflag =-1;
+                        yflag =-1;
+                    }
+                    tAnimation = new TranslateAnimation(xflag*x, 0,
+                            yflag*y, 0);
+                }else{
+                    tAnimation = new TranslateAnimation(xflag*x, 0,
+                            yflag*y, 0);
+                }
+
                 tAnimation.setDuration(duration);
                 tAnimation.setFillAfter(true);
-
+//                Log.e(TAG,"CLOSE  ---   FromX:"+(xflag*x)+" --- ToX:0 \nCLOSE  ---   FromY:"+(yflag*y)+" --- ToY:0"+" --- which:"+i);
             }else//否则为打开状态，就应该关闭
             {
-                tAnimation = new TranslateAnimation( 0,xflag*x,
-                        0,yflag*y);
+                if(mPosition == Position.RIGHT_BOTTOM||mPosition == Position.LEFT_BOTTOM ||
+                        mPosition == Position.LEFT_TOP||mPosition == Position.RIGHT_TOP) {
+                    tAnimation = new TranslateAnimation(0, xflag * x,
+                            0, yflag * y);
+                }else if(mPosition == Position.MIDDLE_BOTTOM || mPosition == Position.CENTER_TOP){
+                    div = Math.PI/2;
+                    radius = Math.PI/6.0 + Math.PI*i*2.0/((count-2)*3.0);
+                    y = (int) (mRadius*Math.sin(radius));
+                    countLeft = 2 * (i+1);
+                    countRight = count;
+                    if(countLeft==countRight){
+                        y = mRadius;
+                        x = 0;
+                    }else{
+                        if(div>radius){
+                            x = (int) (mRadius*Math.cos(radius));
+                        }else{
+                            x = -1*((int) (mRadius*Math.cos(radius)));
+                        }
+                    }
+                    if(div>radius){//与右下一致
+                        xflag =1;
+                        yflag =1;
+                    }else{//与左下一致
+                        xflag =-1;
+                        yflag =1;
+                    }
+                    tAnimation = new TranslateAnimation(0, xflag * x,
+                            0, yflag * y);
+                }else if(mPosition == Position.MIDDLE_TOP || mPosition == Position.CENTER_BOTTOM){
+                    div = Math.PI/2;
+                    radius = Math.PI/6.0 + Math.PI*i*2.0/((count-2)*3.0);
+                    y = (int) (mRadius*Math.sin(radius));
+                    countLeft = 2 * (i+1);
+                    countRight = count;
+                    if(countLeft==countRight){
+                        y = mRadius;
+                        x = 0;
+                    }else{
+                        if(div>radius){
+                            x = (int) (mRadius*Math.cos(radius));
+                        }else{
+                            x = -1*((int) (mRadius*Math.cos(radius)));
+                        }
+                    }
+                    if(div>radius){//与右下一致
+                        xflag =1;
+                        yflag =-1;
+                    }else{//与左下一致
+                        xflag =-1;
+                        yflag =-1;
+                    }
+                    tAnimation = new TranslateAnimation(0, xflag * x,
+                            0, yflag * y);
+                }else{
+                    tAnimation = new TranslateAnimation(0, xflag * x,
+                            0, yflag * y);
+                }
+
                 tAnimation.setDuration(duration);
                 tAnimation.setFillAfter(true);
-
             }
+
+
+
+
             tAnimation.setStartOffset((i * 100) / count);
             tAnimation.setAnimationListener(new AnimationListener() {
 
 
                 public void onAnimationStart(Animation animation) {
-
 
                 }
 

@@ -9,8 +9,8 @@
         android:id="@+id/id_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        kun:position="right_bottom"
-        kun:radius="100dp">
+        kun:position="center_bottom"
+        kun:radius="80dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
